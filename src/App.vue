@@ -1,11 +1,11 @@
 <template>
-  <div class="app" v-if="weatherData">
+  <div id="app" v-if="weatherData">
     <Card
       :name="weatherData.name"
       :country="weatherData.sys.county"
       :sunrise="weatherData.sys.sunrise"
       :sunset="weatherData.sys.sunset"
-      :temp="weatherData.main.tmep"
+      :temp="weatherData.main.temp"
       :max_temp="weatherData.main.max_temp"
       :min_temp="weatherData.main.min_temp"
       :windSpeed="weatherData.wind.speed"
@@ -18,6 +18,7 @@
 <script>
 require("dotenv").config();
 import Card from "./components/WeatherCard";
+
 export default {
   name: "App",
   components: {
@@ -31,10 +32,10 @@ export default {
     };
   },
   methods: {
-    async getWeatherData() {
+    async getWeatherData(cityName = "London") {
       try {
         const response = await fetch(
-          `${this.weatherURL}q=London&appid=${this.OPEN_WEATHER_API}`
+          `${this.weatherURL}q=${cityName}&appid=${this.OPEN_WEATHER_API}`
         );
         const data = await response.json();
         console.log(data);
@@ -42,9 +43,6 @@ export default {
       } catch (err) {
         console.log(err);
       }
-    },
-    getTempValue(tempValue) {
-      return tempValue - 273;
     },
   },
   computed: {},
@@ -57,10 +55,5 @@ export default {
 <style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>

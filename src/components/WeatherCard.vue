@@ -1,5 +1,5 @@
 <template>
-  <div class="weather-card">{{ name }}</div>
+  <div class="weather-card">{{ act_temp(temp) }}</div>
 </template>
 
 <script>
@@ -17,6 +17,12 @@ export default {
     sunrise: Number,
     sunset: Number,
   },
+  methods: {
+    act_temp: function(temp) {
+      return Math.round(temp - 273);
+    },
+  },
+  computed: {},
 };
 </script>
 
