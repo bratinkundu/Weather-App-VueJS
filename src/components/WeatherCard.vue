@@ -26,4 +26,10 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.weather-card {
+  flex-basis: 500px;
+  height: 400px;
+  background: #414141;
+}
+</style>

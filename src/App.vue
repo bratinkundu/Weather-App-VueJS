@@ -54,6 +54,11 @@ export default {
 
 <style lang="scss">
 #app {
+  min-height: 100vh;
+  width: 100%;
   font-family: Avenir, Helvetica, Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
