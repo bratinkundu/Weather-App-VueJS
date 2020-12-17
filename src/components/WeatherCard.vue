@@ -1,10 +1,23 @@
 <template>
-  <div class="weather-card">{{ act_temp(temp) }}</div>
+  <div class="weather-card" :class="dayOrNight">
+    <h1 class="location">{{ name }}, {{ country }}</h1>
+    <TodayData
+      :temp="act_temp(temp)"
+      :min_temp="act_temp(min_temp)"
+      :max_temp="act_temp(max_temp)"
+      :speed="windSpeed"
+    />
+  </div>
 </template>
 
 <script>
+import TodayData from "./TodayData";
+
 export default {
   name: "weather-card",
+  components: {
+    TodayData,
+  },
   props: {
     name: String,
     country: String,
@@ -16,20 +29,40 @@ export default {
     weather_desc: String,
     sunrise: Number,
     sunset: Number,
+    time: Number,
   },
   methods: {
     act_temp: function(temp) {
+      console.log(temp);
       return Math.round(temp - 273);
     },
   },
-  computed: {},
+  computed: {
+    dayOrNight: function() {
+      console.log(new Date(this.time).getHours());
+      return new Date(this.time).getHours() > 12 ? "night" : "day";
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+@import "../assets/styles/common.scss";
 .weather-card {
-  flex-basis: 500px;
-  height: 400px;
+  @include flex-center;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+}
+.location {
+  font-size: 3rem;
+}
+.day {
+  background: yellow;
+  color: #414141;
+}
+.night {
   background: #414141;
+  color: white;
 }
 </style>

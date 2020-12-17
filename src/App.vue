@@ -2,15 +2,16 @@
   <div id="app" v-if="weatherData">
     <Card
       :name="weatherData.name"
-      :country="weatherData.sys.county"
+      :country="weatherData.sys.country"
       :sunrise="weatherData.sys.sunrise"
       :sunset="weatherData.sys.sunset"
       :temp="weatherData.main.temp"
-      :max_temp="weatherData.main.max_temp"
-      :min_temp="weatherData.main.min_temp"
+      :max_temp="weatherData.main.temp_max"
+      :min_temp="weatherData.main.temp_min"
       :windSpeed="weatherData.wind.speed"
       :weather_desc="weatherData.weather.description"
       :humidity="weatherData.main.humidity"
+      :time="weatherData.dt"
     />
   </div>
 </template>
@@ -28,7 +29,9 @@ export default {
     return {
       OPEN_WEATHER_API: "9e9d9499cf2a6979cddba99d7199569f",
       weatherURL: "http://api.openweathermap.org/data/2.5/weather?",
+      hourlyData: "http://api.openweathermap.org/data/2.5/forecast?",
       weatherData: null,
+      graphData: Array,
     };
   },
   methods: {
@@ -38,8 +41,29 @@ export default {
           `${this.weatherURL}q=${cityName}&appid=${this.OPEN_WEATHER_API}`
         );
         const data = await response.json();
-        console.log(data);
         this.weatherData = data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async getHourlyData(cityName = "London") {
+      try {
+        const response = await fetch(
+          `${this.hourlyData}q=${cityName}&appid=${this.OPEN_WEATHER_API}`
+        );
+        const data = await response.json();
+        // this.graphData = data.list.map((ele) => {});
+        this.graphData = data.list
+          .filter((ele) => {
+            return ele.dt === Date.now();
+          })
+          .map((ele) => {
+            return {
+              timestamp: ele.dt,
+              temp: Math.round(ele.main.temp - 273),
+            };
+          });
+        console.log(this.graphData);
       } catch (err) {
         console.log(err);
       }
@@ -48,6 +72,7 @@ export default {
   computed: {},
   mounted() {
     this.getWeatherData();
+    this.getHourlyData();
   },
 };
 </script>
