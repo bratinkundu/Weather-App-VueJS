@@ -17,7 +17,7 @@
         Locate Me
       </button>
     </form>
-    <span v-if="error" class="error-text">Enter a valid input</span>
+    <span v-if="error > 0" class="error-text">Enter a valid input</span>
   </div>
 </template>
 
@@ -33,12 +33,13 @@ export default {
   methods: {
     onTextSubmit(e) {
       e.preventDefault();
-      this.error = true;
+      !this.cityName ? (this.error = true) : (this.error = false);
       this.$emit("new-text-location", this.cityName);
     },
     onLocationSubmit(e) {
       if (e) e.preventDefault();
-      this.$emit("new-geo-location", this.getUserLocation());
+      const data = this.getUserLocation();
+      this.$emit("new-geo-location", data);
     },
     getUserLocation() {
       navigator.geolocation.getCurrentPosition((position) => {

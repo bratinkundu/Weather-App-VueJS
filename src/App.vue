@@ -43,9 +43,11 @@ export default {
   },
   methods: {
     // Async functions (API calls)
-    async getWeatherData(data = "London") {
+    async getWeatherData(data) {
       try {
         console.log(data);
+        if (!data) data = "London";
+
         const response =
           typeof data === "string"
             ? await fetch(
@@ -54,20 +56,28 @@ export default {
             : await fetch(
                 `${this.weatherURL}lat=${data.lati}&lon=${data.long}&appid=${this.OPEN_WEATHER_API}`
               );
-        // const response =
+
         this.weatherData = await response.json();
+        this.getHourlyData(data);
         console.log(this.weatherData);
       } catch (err) {
         console.log(err);
       }
     },
 
-    async getHourlyData(cityName = "London") {
+    async getHourlyData(data) {
       try {
-        const response = await fetch(
-          `${this.hourlyData}q=${cityName}&appid=${this.OPEN_WEATHER_API}`
-        );
-        this.graphData = this.filterDateAndTemp(await response.json());
+        if (!data) data = "London";
+        const response =
+          typeof data === "string"
+            ? await fetch(
+                `${this.weatherURL}q=${data}&appid=${this.OPEN_WEATHER_API}`
+              )
+            : await fetch(
+                `${this.weatherURL}lat=${data.lati}&lon=${data.long}&appid=${this.OPEN_WEATHER_API}`
+              );
+        const respData = await response.json();
+        this.graphData = this.filterDateAndTemp(respData);
         console.log(this.graphData);
       } catch (err) {
         console.log(err);

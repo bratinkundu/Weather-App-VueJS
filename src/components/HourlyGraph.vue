@@ -62,6 +62,13 @@ export default {
   mounted() {
     this.renderChart(this.chartdata, this.options);
   },
+  watch: {
+    data: function() {
+      console.log("called");
+      this._chart.destroy();
+      this.renderChart(this.chartdata, this.options);
+    },
+  },
 };
 </script>
 
