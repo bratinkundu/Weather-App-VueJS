@@ -12,6 +12,7 @@
       :weather_desc="weatherData.weather.description"
       :humidity="weatherData.main.humidity"
       :time="weatherData.dt"
+      :graphData="graphData"
     />
   </div>
 </template>
@@ -61,16 +62,33 @@ export default {
 
     // Synconous functions
     filterDateAndTemp(data) {
-      return data.list
-        .filter((ele) => {
-          return new Date(ele.dt * 1000).getDate() === new Date().getDate();
-        })
-        .map((ele) => {
-          return {
-            timestamp: new Date(ele.dt * 1000).toLocaleTimeString(),
-            temp: Math.round(ele.main.temp - 273),
-          };
-        });
+      const newData = data.list.filter((ele) => {
+        return new Date(ele.dt * 1000).getDate() === new Date().getDate();
+      });
+      const temps = newData.map((ele) => Math.round(ele.main.temp - 273));
+      const times = newData.map((ele) =>
+        new Date(ele.dt * 1000).toLocaleTimeString()
+      );
+      return {
+        temps,
+        times,
+      };
+      // return data.list.slice(1, 5).map((ele) => {
+      //   return {
+      //     timestamp: new Date(ele.dt * 1000).toLocaleTimeString(),
+      //     temp: Math.round(ele.main.temp - 273),
+      //   };
+      // });
+      // return data.list
+      //   .filter((ele) => {
+      //     return new Date(ele.dt * 1000).getDate() === new Date().getDate();
+      //   })
+      //   .map((ele) => {
+      //     return {
+      //       timestamp: new Date(ele.dt * 1000).toLocaleTimeString(),
+      //       temp: Math.round(ele.main.temp - 273),
+      //     };
+      //   });
     },
   },
   computed: {},

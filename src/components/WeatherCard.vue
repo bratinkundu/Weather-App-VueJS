@@ -7,16 +7,23 @@
       :max_temp="act_temp(max_temp)"
       :speed="windSpeed"
     />
+    <LineChart
+      :data="graphData.temps"
+      :label="graphData.times"
+      v-if="graphData.times"
+    />
   </div>
 </template>
 
 <script>
 import TodayData from "./TodayData";
+import LineChart from "./HourlyGraph";
 
 export default {
   name: "weather-card",
   components: {
     TodayData,
+    LineChart,
   },
   props: {
     name: String,
@@ -30,16 +37,15 @@ export default {
     sunrise: Number,
     sunset: Number,
     time: Number,
+    graphData: [Object, Function, undefined],
   },
   methods: {
     act_temp: function(temp) {
-      console.log(temp);
       return Math.round(temp - 273);
     },
   },
   computed: {
     dayOrNight: function() {
-      console.log(new Date(this.time).getHours());
       return new Date(this.time).getHours() > 12 ? "night" : "day";
     },
   },
