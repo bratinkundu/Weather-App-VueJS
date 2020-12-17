@@ -35,38 +35,42 @@ export default {
     };
   },
   methods: {
+    // Async functions (API calls)
     async getWeatherData(cityName = "London") {
       try {
         const response = await fetch(
           `${this.weatherURL}q=${cityName}&appid=${this.OPEN_WEATHER_API}`
         );
-        const data = await response.json();
-        this.weatherData = data;
+        this.weatherData = await response.json();
       } catch (err) {
         console.log(err);
       }
     },
+
     async getHourlyData(cityName = "London") {
       try {
         const response = await fetch(
           `${this.hourlyData}q=${cityName}&appid=${this.OPEN_WEATHER_API}`
         );
-        const data = await response.json();
-        // this.graphData = data.list.map((ele) => {});
-        this.graphData = data.list
-          .filter((ele) => {
-            return ele.dt === Date.now();
-          })
-          .map((ele) => {
-            return {
-              timestamp: ele.dt,
-              temp: Math.round(ele.main.temp - 273),
-            };
-          });
+        this.graphData = this.filterDateAndTemp(await response.json());
         console.log(this.graphData);
       } catch (err) {
         console.log(err);
       }
+    },
+
+    // Synconous functions
+    filterDateAndTemp(data) {
+      return data.list
+        .filter((ele) => {
+          return new Date(ele.dt * 1000).getDate() === new Date().getDate();
+        })
+        .map((ele) => {
+          return {
+            timestamp: new Date(ele.dt * 1000).toLocaleTimeString(),
+            temp: Math.round(ele.main.temp - 273),
+          };
+        });
     },
   },
   computed: {},
