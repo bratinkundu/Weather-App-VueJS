@@ -1,5 +1,9 @@
 <template>
-  <div id="app" v-if="weatherData">
+  <div id="app" :class="dayOrNight" v-if="weatherData">
+    <LocationForm
+      @new-text-location="getWeatherData"
+      @new-geo-location="getWeatherData"
+    />
     <Card
       :name="weatherData.name"
       :country="weatherData.sys.country"
@@ -20,11 +24,13 @@
 <script>
 require("dotenv").config();
 import Card from "./components/WeatherCard";
+import LocationForm from "./components/LocationForm";
 
 export default {
   name: "App",
   components: {
     Card,
+    LocationForm,
   },
   data: () => {
     return {
@@ -37,12 +43,20 @@ export default {
   },
   methods: {
     // Async functions (API calls)
-    async getWeatherData(cityName = "London") {
+    async getWeatherData(data = "London") {
       try {
-        const response = await fetch(
-          `${this.weatherURL}q=${cityName}&appid=${this.OPEN_WEATHER_API}`
-        );
+        console.log(data);
+        const response =
+          typeof data === "string"
+            ? await fetch(
+                `${this.weatherURL}q=${data}&appid=${this.OPEN_WEATHER_API}`
+              )
+            : await fetch(
+                `${this.weatherURL}lat=${data.lati}&lon=${data.long}&appid=${this.OPEN_WEATHER_API}`
+              );
+        // const response =
         this.weatherData = await response.json();
+        console.log(this.weatherData);
       } catch (err) {
         console.log(err);
       }
@@ -60,15 +74,22 @@ export default {
       }
     },
 
+    async getInputWeatherData(data) {
+      console.log(data);
+    },
     // Synconous functions
     filterDateAndTemp(data) {
-      const newData = data.list.filter((ele) => {
-        return new Date(ele.dt * 1000).getDate() === new Date().getDate();
+      // const newData = data.list.filter((ele) => {
+      //   return new Date(ele.dt * 1000).getDate() === new Date().getDate();
+      // });
+      const newData = data.list.slice(1, 5);
+      const temps = newData.map((ele) => (ele.main.temp - 273).toFixed(1));
+      const times = newData.map((ele) => {
+        const time = new Date(ele.dt * 1000);
+        return `${
+          time.getHours() < 12 ? time.getHours() : time.getHours() - 12
+        }:${time.getMinutes()} ${time.getHours() > 12 ? "AM" : "PM"}`;
       });
-      const temps = newData.map((ele) => Math.round(ele.main.temp - 273));
-      const times = newData.map((ele) =>
-        new Date(ele.dt * 1000).toLocaleTimeString()
-      );
       return {
         temps,
         times,
@@ -91,10 +112,17 @@ export default {
       //   });
     },
   },
-  computed: {},
+  computed: {
+    dayOrNight: function() {
+      return new Date(this.weatherData.dt * 1000).getHours() > 12
+        ? "night"
+        : "day";
+    },
+  },
   mounted() {
     this.getWeatherData();
     this.getHourlyData();
+    // this.getUserLocation();
   },
 };
 </script>
@@ -105,7 +133,16 @@ export default {
   width: 100%;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+.day {
+  background: yellow;
+  color: #414141;
+}
+.night {
+  background: #414141;
+  color: white;
 }
 </style>

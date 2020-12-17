@@ -45,10 +45,9 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-evenly;
   width: 100%;
   align-items: center;
-  gap: 100px;
   margin: 0 15px;
 }
 .main-temp {

@@ -1,5 +1,5 @@
 <template>
-  <div class="weather-card" :class="dayOrNight">
+  <div class="weather-card">
     <h1 class="location">{{ name }}, {{ country }}</h1>
     <TodayData
       :temp="act_temp(temp)"
@@ -8,6 +8,7 @@
       :speed="windSpeed"
     />
     <LineChart
+      class="chart"
       :data="graphData.temps"
       :label="graphData.times"
       v-if="graphData.times"
@@ -44,11 +45,6 @@ export default {
       return Math.round(temp - 273);
     },
   },
-  computed: {
-    dayOrNight: function() {
-      return new Date(this.time).getHours() > 12 ? "night" : "day";
-    },
-  },
 };
 </script>
 
@@ -57,18 +53,16 @@ export default {
 .weather-card {
   @include flex-center;
   flex-direction: column;
-  width: 100%;
-  min-height: 100vh;
+  width: clamp(300px, 50%, 80%);
+  // min-height: 100vh;
 }
 .location {
   font-size: 3rem;
 }
-.day {
-  background: yellow;
-  color: #414141;
-}
-.night {
-  background: #414141;
-  color: white;
+.chart {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  // margin: 0 5%;
 }
 </style>

@@ -14,7 +14,8 @@ export default {
         datasets: [
           {
             label: null,
-            backgroundColor: "#f87979",
+            backgroundColor: "#17CAFF",
+            borderDashOffset: 2.0,
             data: this.data,
           },
         ],
@@ -31,6 +32,30 @@ export default {
             title: () => null,
           },
         },
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                // beginAtZero: true,
+                stepSize: 0.5,
+                suggestedMax: this.data[0] + 2,
+                suggestedMin: this.data[0] - 2,
+              },
+              gridLines: {
+                display: false,
+                // color: "#FFFFFF",
+              },
+            },
+          ],
+          xAxes: [
+            {
+              ticks: {},
+              gridLines: {
+                display: false,
+              },
+            },
+          ],
+        },
       },
     };
   },
@@ -39,3 +64,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+canvas {
+  height: 20vh;
+  width: auto;
+}
+</style>
