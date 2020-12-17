@@ -65,7 +65,7 @@ export default {
   watch: {
     data: function() {
       console.log("called");
-      this._chart.destroy();
+      this.destroy();
       this.renderChart(this.chartdata, this.options);
     },
   },

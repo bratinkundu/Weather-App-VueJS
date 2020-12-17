@@ -45,7 +45,6 @@ export default {
     // Async functions (API calls)
     async getWeatherData(data) {
       try {
-        console.log(data);
         if (!data) data = "London";
 
         const response =
@@ -68,17 +67,19 @@ export default {
     async getHourlyData(data) {
       try {
         if (!data) data = "London";
+        console.log(data);
+
         const response =
           typeof data === "string"
             ? await fetch(
-                `${this.weatherURL}q=${data}&appid=${this.OPEN_WEATHER_API}`
+                `${this.hourlyData}q=${data}&appid=${this.OPEN_WEATHER_API}`
               )
             : await fetch(
-                `${this.weatherURL}lat=${data.lati}&lon=${data.long}&appid=${this.OPEN_WEATHER_API}`
+                `${this.hourlyData}lat=${data.lati}&lon=${data.long}&appid=${this.OPEN_WEATHER_API}`
               );
         const respData = await response.json();
+        console.log(respData);
         this.graphData = this.filterDateAndTemp(respData);
-        console.log(this.graphData);
       } catch (err) {
         console.log(err);
       }

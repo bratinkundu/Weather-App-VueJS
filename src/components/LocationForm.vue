@@ -44,6 +44,7 @@ export default {
     getUserLocation() {
       navigator.geolocation.getCurrentPosition((position) => {
         console.log(position.coords.latitude, position.coords.longitude);
+        this.onLocationSubmit();
         return {
           lati: position.coords.latitude,
           long: position.coords.longitude,
@@ -51,9 +52,7 @@ export default {
       });
     },
   },
-  created() {
-    this.onLocationSubmit();
-  },
+  created() {},
 };
 </script>
 
