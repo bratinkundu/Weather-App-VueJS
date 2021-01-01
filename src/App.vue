@@ -48,7 +48,7 @@ export default {
         if (!data) data = "London";
 
         const response =
-          typeof data === "string"
+          typeof data === typeof ""
             ? await fetch(
                 `${this.weatherURL}q=${data}&appid=${this.OPEN_WEATHER_API}`
               )
@@ -70,7 +70,7 @@ export default {
         console.log(data);
 
         const response =
-          typeof data === "string"
+          typeof data === typeof ""
             ? await fetch(
                 `${this.hourlyData}q=${data}&appid=${this.OPEN_WEATHER_API}`
               )
@@ -149,7 +149,7 @@ export default {
   align-items: center;
 }
 .day {
-  background: yellow;
+  // background: yellow;
   color: #414141;
 }
 .night {
